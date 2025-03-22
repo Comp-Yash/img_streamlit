@@ -23,11 +23,11 @@ import os
 import google.generativeai as genai
 import requests
 from pydub import AudioSegment
-import whisper
+
 import yt_dlp
 import io
 from youtube_transcript_api import YouTubeTranscriptApi
-import openai
+
 import streamlit as st
 
 
@@ -48,45 +48,8 @@ Please provide the summary of the text given here:  """
 # Functions 
 
 
-def download_audio(youtube_video_url, output_folder="b", output_file="ap.mp3"):
-    # Ensure the output folder exists
-    os.makedirs(output_folder, exist_ok=True)
 
-    # Define the full output path
-    output_path = os.path.join(output_folder, output_file)
 
-    # Set options for yt-dlp
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': output_path,  # Specify the output file directly
-        'quiet': True,
-        'no_warnings': True
-    }
-
-    # Download the audio
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([youtube_video_url])
-
-    return output_path
-
-def transcribe_audio(audio_file):
-    # Load the Whisper model
-    model = whisper.load_model("base")  # You can choose 'small', 'medium', or 'large' for better accuracy
-
-    # Transcribe the audio file
-    transcription = model.transcribe(audio_file)
-
-    return transcription['text']
-
-# Main function to handle the workflow
-def voice_text(youtube_video_url):
-    # Step 1: Download audio from the YouTube video
-    audio_file = download_audio(youtube_video_url)
-
-    # Step 2: Transcribe the downloaded audio
-    transcription_text = transcribe_audio(audio_file)
-
-    return transcription_text
 
 
 
