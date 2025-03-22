@@ -3,5 +3,7 @@ pytube
 google-generativeai
 requests
 pydub
+openai
+whisper
 yt-dlp
 youtube-transcript-api
