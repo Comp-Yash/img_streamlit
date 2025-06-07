@@ -140,7 +140,7 @@ if youtube_link:
     try:
         yt = YouTube(youtube_link)
         video_id = yt.video_id
-        st.image(f"http://img.youtube.com/vi/{video_id}/0.jpg", use_column_width=True)
+        st.image(f"http://img.youtube.com/vi/{video_id}/0.jpg", use_container_width=True)
     except Exception as e:
         st.error(f"Could not load the video: {str(e)}")
 
