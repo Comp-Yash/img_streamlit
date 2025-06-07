@@ -67,16 +67,19 @@ def get_youtube_video_text(video_url):
     str: Combined text from the video captions or an error message.
     """
     try:
-        # Extract the video ID from the URL
         video_id = video_url.split("v=")[-1].split("&")[0]
 
-        # Get the transcript for the video
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        # Get available transcripts
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
 
-        # Combine the text from the transcript
-        combined_text = " ".join([entry['text'] for entry in transcript])
+        # Try to fetch English transcript
+        if transcript_list.find_transcript(['en']):
+            transcript = transcript_list.find_transcript(['en']).fetch()
+            combined_text = " ".join([entry['text'] for entry in transcript])
+            return combined_text
+        else:
+            return "Transcript not available for this video."
 
-        return combined_text
     except Exception as e:
         return f"An error occurred: {str(e)}"
     
@@ -134,13 +137,14 @@ def generate_gemini_content(transcript_text, prompt):
 
 # Streamlit application
 st.title("YouTube Transcript to Detailed Notes Converter")
+st.text("eg of link : https://www.youtube.com/watch?v=MDBG2MOp4Go&t=86s")
 youtube_link = st.text_input("Enter YouTube Video Link:")
 
 if youtube_link:
     try:
         yt = YouTube(youtube_link)
         video_id = yt.video_id
-        st.image(f"http://img.youtube.com/vi/{video_id}/0.jpg", use_container_width=True)
+        st.image(f"http://img.youtube.com/vi/{video_id}/0.jpg",  width=500)
     except Exception as e:
         st.error(f"Could not load the video: {str(e)}")
 
